@@ -9,7 +9,7 @@ fun main(args: Array<String>) {
     val app = Javalin.start(7001)
     app.routes {
         get("/cache/:id",{ ctx ->
-            ctx.json(lookupService.get(ctx.param("id")!!))
+            lookupService.get(ctx.param("id")!!, {jsonNode -> ctx.json(jsonNode) })
         })
     }
 }
