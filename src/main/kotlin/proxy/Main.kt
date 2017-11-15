@@ -2,6 +2,7 @@ package proxy
 
 import io.javalin.ApiBuilder.*
 import io.javalin.Javalin
+import java.util.*
 
 val lookupService = LookupService(LookupRepo("http://localhost:7000/posts/"),HashMap())
 
