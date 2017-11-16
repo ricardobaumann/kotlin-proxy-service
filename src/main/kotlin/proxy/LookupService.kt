@@ -3,7 +3,7 @@ package proxy
 import com.fasterxml.jackson.databind.JsonNode
 import kotlin.concurrent.fixedRateTimer
 
-class LookupService(private val lookupRepo: LookupRepo,
+open class LookupService(private val lookupRepo: LookupRepo,
                     private val cache : MutableMap<String, JsonNode>,
                     reloadEvery : Long = 5000) {
 
