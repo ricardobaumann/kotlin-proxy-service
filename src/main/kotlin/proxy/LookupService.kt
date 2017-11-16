@@ -15,10 +15,10 @@ class LookupService(private val lookupRepo: LookupRepo,
         }
     }
 
-    fun get(path : String, fn : (JsonNode) -> Unit) {
-        fn(cache.computeIfAbsent(path,{ _ ->
+    fun get(path : String) : JsonNode {
+        return cache.computeIfAbsent(path, { _ ->
             lookupRepo.load(path)
-        }))
+        })
     }
 
 }

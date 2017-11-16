@@ -19,7 +19,7 @@ fun main(args: Array<String>) {
             }
         }
         get("/cache/:id",{ ctx ->
-            lookupService.get(ctx.param("id")!!, {jsonNode -> ctx.json(jsonNode) })
+            ctx.json(lookupService.get(ctx.param("id")!!))
         })
     }
 }
