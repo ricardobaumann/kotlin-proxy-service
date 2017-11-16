@@ -4,30 +4,27 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
-import com.github.kittinunf.result.getAs
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import org.assertj.core.api.Assertions
-import org.hamcrest.core.Is
 import org.junit.After
-import org.junit.Assert
 import org.junit.Before
 
 import org.junit.Test
 import org.mockito.Mockito
-import org.mockito.Mockito.*
-import java.util.HashMap
 
 class ProxyApplicationTest {
-
-    val lookupService : LookupService by lazy { LookupService(
-            LookupRepo("http://localhost:7000/posts/"), HashMap()) }
-
     val objectMapper = ObjectMapper()
 
     val testEntity = objectMapper.createObjectNode().put("title","test").put("body","test")
 
+    val lookupService : LookupService = mock<LookupService> {
+        onGeneric { get("1") }.thenReturn(testEntity)
+    }
+
     @Before
     fun setUp() {
-        //`when`(lookupService.get(Mockito.anyString())).thenReturn(testEntity)
 
         ProxyApplication(lookupService, arrayOf("test","test"),7005)
 
@@ -46,6 +43,7 @@ class ProxyApplicationTest {
         when(result) {
             is Result.Success -> {
                 Assertions.assertThat(objectMapper.readTree(result.get())).isEqualTo(testEntity)
+                println("success")
             }
             is Result.Failure -> {
                 Assertions.fail(result.error.message)

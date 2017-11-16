@@ -15,7 +15,7 @@ open class LookupService(private val lookupRepo: LookupRepo,
         }
     }
 
-    fun get(path : String) : JsonNode {
+    open fun get(path : String) : JsonNode {
         return cache.computeIfAbsent(path, { _ ->
             lookupRepo.load(path)
         })
