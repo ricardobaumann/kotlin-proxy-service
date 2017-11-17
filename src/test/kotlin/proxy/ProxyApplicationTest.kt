@@ -4,15 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
-import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
 import org.assertj.core.api.Assertions
 import org.junit.After
 import org.junit.Before
 
 import org.junit.Test
-import org.mockito.Mockito
 
 class ProxyApplicationTest {
     val objectMapper = ObjectMapper()
