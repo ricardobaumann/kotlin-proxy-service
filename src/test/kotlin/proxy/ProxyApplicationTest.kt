@@ -7,6 +7,7 @@ import com.github.kittinunf.result.Result
 import com.nhaarman.mockito_kotlin.mock
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.*
+import org.junit.After
 import org.junit.Before
 
 import org.junit.Test
@@ -20,10 +21,10 @@ class ProxyApplicationTest {
         onGeneric { get("1") }.thenReturn(testEntity)
     }
 
+    private val app = ProxyApplication(lookupService, arrayOf("test","test"),7005)
+
     @Before
     fun setUp() {
-
-        ProxyApplication(lookupService, arrayOf("test","test"),7005)
 
         Fuel.testMode {
             timeout = 15000 // Optional feature, set all requests' timeout to this value.
@@ -43,5 +44,16 @@ class ProxyApplicationTest {
                 fail(result.error.message)
             }
         }
+    }
+
+    @Test
+    fun shouldReturnUnauthorizedOnWrongCredentials() {
+        val (_, _, result) = "http://localhost:7005/cache/1".httpGet().authenticate("another","hey").response()
+        assertThat(result.component2()?.response!!.statusCode).isEqualTo(401)
+    }
+
+    @After
+    fun after() {
+        app.app.stop()
     }
 }
