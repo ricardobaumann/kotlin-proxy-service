@@ -1,5 +1,4 @@
 group 'com.github.ricardobaumann'
-version '1.0-SNAPSHOT'
 
 buildscript {
     ext.kotlin_version = '1.1.60'
@@ -45,6 +44,7 @@ compileTestKotlin {
 }
 
 jar {
+    baseName = "app"
     manifest {
         attributes 'Main-Class': 'proxy.MainKt'
     }
