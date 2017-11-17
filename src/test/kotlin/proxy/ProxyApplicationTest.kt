@@ -32,8 +32,6 @@ class ProxyApplicationTest {
         Fuel.testMode {
             timeout = 15000 // Optional feature, set all requests' timeout to this value.
         }
-
-        Thread.sleep(1000)
     }
 
     @Test
@@ -52,6 +50,12 @@ class ProxyApplicationTest {
     @Test
     fun shouldReturnUnauthorizedOnWrongCredentials() {
         val (_, _, result) = path.httpGet().authenticate("another","hey").response()
+        assertThat(result.component2()?.response!!.statusCode).isEqualTo(401)
+    }
+
+    @Test
+    fun shouldReturnUnauthorizedOnEmptyCredentials() {
+        val (_, _, result) = path.httpGet().response()
         assertThat(result.component2()?.response!!.statusCode).isEqualTo(401)
     }
 
