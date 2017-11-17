@@ -5,7 +5,6 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
 import com.nhaarman.mockito_kotlin.mock
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.*
 import org.junit.After
 import org.junit.Before
@@ -17,11 +16,15 @@ class ProxyApplicationTest {
 
     private val testEntity = objectMapper.createObjectNode().put("title","test").put("body","test")!!
 
-    private val lookupService : LookupService = mock<LookupService> {
+    private val lookupService : LookupService = mock {
         onGeneric { get("1") }.thenReturn(testEntity)
     }
 
-    private val app = ProxyApplication(lookupService, arrayOf("test","test"),7005)
+    private val port = 7005
+
+    private val path = "http://localhost:$port/cache/1"
+
+    private val app = ProxyApplication(lookupService, arrayOf("test","test"),port)
 
     @Before
     fun setUp() {
@@ -35,7 +38,7 @@ class ProxyApplicationTest {
 
     @Test
     fun shouldReturnExistentObject() {
-        val (_, _, result) = "http://localhost:7005/cache/1".httpGet().authenticate("test","test").response()
+        val (_, _, result) = path.httpGet().authenticate("test","test").response()
         when(result) {
             is Result.Success -> {
                 assertThat(objectMapper.readTree(result.get())).isEqualTo(testEntity)
@@ -48,7 +51,7 @@ class ProxyApplicationTest {
 
     @Test
     fun shouldReturnUnauthorizedOnWrongCredentials() {
-        val (_, _, result) = "http://localhost:7005/cache/1".httpGet().authenticate("another","hey").response()
+        val (_, _, result) = path.httpGet().authenticate("another","hey").response()
         assertThat(result.component2()?.response!!.statusCode).isEqualTo(401)
     }
 
